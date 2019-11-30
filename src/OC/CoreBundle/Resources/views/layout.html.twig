@@ -2,27 +2,62 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}OC Plateforme{% endblock %}</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% block stylesheets %}
-      {# On charge le CSS de bootstrap depuis le site directement #}
-      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    {% endblock %}
-  </head>
+  <title>{% block title %}OC Plateforme{% endblock %}</title>
 
-  <body>
+  {% block stylesheets %}
+  {# On charge le CSS de bootstrap depuis le site directement #}
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <style>
+    html,
+    body,
+    .view {
+      height: 100%;
+      margin-top: -52px;
+    }
+
+    .intro-2 {
+      background: url("https://mdbootstrap.com/img/Photos/Others/img (50).jpg")no-repeat center center;
+      background-size: cover;
+    }
+
+
+    .mon-titre h1 {
+      color: white;
+      padding-top: 20%;
+      text-align: center;
+      font-family: sans-serif;
+    }
+  </style>
+  {% endblock %}
+</head>
+
+<body>
+
+  <div class="view intro-2">
+    <div class="full-bg-img">
+      <div class="mask rgba-black-light flex-center">
+        <div class="mon-titre">
+          <h1>Ma plateforme d'annonces</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="container">
     <div id="header" class="jumbotron">
-      <h1>Ma plateforme d'annonces</h1>
+
       <p>
         Ce projet est propulsé par Symfony, et construit grâce au MOOC OpenClassrooms et SensioLabs.
       </p>
       <p>
-        <a class="btn btn-primary btn-lg" href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2">
+        <a class="btn btn-primary btn-lg"
+          href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2">
           Participer au MOOC »
         </a>
       </p>
@@ -52,11 +87,13 @@
     </footer>
   </div>
 
+
   {% block javascripts %}
-    {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   {% endblock %}
 
-  </body>
+</body>
+
 </html>
