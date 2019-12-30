@@ -10,6 +10,10 @@ use OC\PlatformBundle\Form\AdvertType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
+
 
 class AdvertController extends Controller
 {
@@ -55,51 +59,49 @@ class AdvertController extends Controller
 
     // Pour récupérer une seule annonce, on utilise la méthode find($id)
     $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
-
     if (null === $advert) {
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
-
     // Récupération de la liste des candidatures de l'annonce
     $listApplications = $em
       ->getRepository('OCPlatformBundle:Application')
       ->findBy(array('advert' => $advert))
     ;
-
     // Récupération des AdvertSkill de l'annonce
     $listAdvertSkills = $em
       ->getRepository('OCPlatformBundle:AdvertSkill')
-      ->findBy(array('advert' => $advert))
-    ;
+      ->findBy(array('advert' => $advert));
 
     return $this->render('OCPlatformBundle:Advert:view.html.twig', array(
       'advert'           => $advert,
       'listApplications' => $listApplications,
-      'listAdvertSkills' => $listAdvertSkills,
+      'listAdvertSkills' => $listAdvertSkills,     
     ));
   }
 /******************************************************************************************************************
  *                               A   J   O   U   T   E   R
  * *****************************************************************************************************************/
+/**
+   * @Security("has_role('ROLE_AUTEUR')")
+   */
   public function addAction(Request $request)
   {
+    // Plus besoin du if avec le security.context, l'annotation s'occupe de tout !
+    // Dans cette méthode, vous êtes sûrs que l'utilisateur courant dispose du rôle ROLE_AUTEUR
     $advert = new Advert();
     $form   = $this->get('form.factory')->create(AdvertType::class, $advert);
-
     if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
-
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-
       return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
     }
-
     return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
       'form' => $form->createView(),
     ));
   }
+
 /******************************************************************************************************************
  *                               E D I T E R
  * *****************************************************************************************************************/
