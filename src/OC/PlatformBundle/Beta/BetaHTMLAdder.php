@@ -14,12 +14,12 @@ class BetaHTMLAdder
 
     // Code à rajouter
     // (Je mets ici du CSS en ligne, mais il faudrait utiliser un fichier CSS bien sûr !)
-    $html = '<div style="position: absolute;
+    $html = '<div style="position: relative; 
                          top: 0; background: grey;
                          width: 100%;
                          text-align: center;
                          color:white;
-                         padding: 0.5em;">Beta J-'.(int) $remainingDays.' !</div>';
+                         padding: 0.5em;">Beta J-'.(int) $remainingDays.' !</div>';//position relative pour par gené la suite du cours
 
     // Insertion du code dans la page, au début du <body>
     $content = str_replace(

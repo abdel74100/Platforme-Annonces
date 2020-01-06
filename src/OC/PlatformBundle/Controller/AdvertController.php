@@ -9,10 +9,13 @@ use OC\PlatformBundle\Form\AdvertEditType;
 use OC\PlatformBundle\Form\AdvertType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use OC\PlatformBundle\Event\PlatformEvents;
+use OC\PlatformBundle\Event\MessagePostEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\ArrayLoader;
 
 
 class AdvertController extends Controller
@@ -86,11 +89,16 @@ class AdvertController extends Controller
    */
   public function addAction(Request $request)
   {
-    // Plus besoin du if avec le security.context, l'annotation s'occupe de tout !
-    // Dans cette méthode, vous êtes sûrs que l'utilisateur courant dispose du rôle ROLE_AUTEUR
     $advert = new Advert();
     $form   = $this->get('form.factory')->create(AdvertType::class, $advert);
     if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+      $event = new MessagePostEvent($advert->getContent(), $advert->getUser());
+
+      // On déclenche l'évènement
+      $this->get('event_dispatcher')->dispatch(PlatformEvents::POST_MESSAGE, $event);
+
+      // On récupère ce qui a été modifié par le ou les listeners, ici le message
+      $advert->setContent($event->getMessage());
       $em = $this->getDoctrine()->getManager();
       $em->persist($advert);
       $em->flush();
@@ -105,6 +113,9 @@ class AdvertController extends Controller
 /******************************************************************************************************************
  *                               E D I T E R
  * *****************************************************************************************************************/
+/**
+   * @Security("has_role('ROLE_AUTEUR')")
+   */
   public function editAction($id, Request $request)
   {
     $em = $this->getDoctrine()->getManager();
@@ -134,6 +145,9 @@ class AdvertController extends Controller
 /******************************************************************************************************************
  *                               S U P P R I M E R
  * *****************************************************************************************************************/
+/**
+   * @Security("has_role('ROLE_AUTEUR')")
+   */
   public function deleteAction(Request $request, $id)
   {
     $em = $this->getDoctrine()->getManager();
@@ -197,5 +211,15 @@ class AdvertController extends Controller
 
     // On redirige vers la page d'accueil
     return $this->redirectToRoute('oc_platform_home');
+  }
+
+
+
+  public function translationAction($name)
+  {
+    
+    return $this->render('OCPlatformBundle:Advert:translation.html.twig', array(
+      'name' => $name
+    ));
   }
 }

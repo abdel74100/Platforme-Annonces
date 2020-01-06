@@ -11,29 +11,13 @@
 
   {% block stylesheets %}
   {# On charge le CSS de bootstrap depuis le site directement #}
+
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-  <style>
-    html,
-    body,
-    .view {
-      height: 100%;
-      margin-top: -52px;
-    }
+  {% stylesheets 'bundles/ocplatform/css/main.css'
+  'bundles/ocplatform/css/platform.css' %}
+  <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+  {% endstylesheets %}
 
-    .intro-2 {
-      background: url("https://mdbootstrap.com/img/Photos/Others/img (50).jpg")no-repeat center center;
-      background-size: cover;
-    }
-
-
-    .mon-titre h1 {
-      color: white;
-      font-size: 80px;
-      padding-top: 20%;
-      text-align: center;
-      font-family: sans-serif;
-    }
-  </style>
   {% endblock %}
 </head>
 
